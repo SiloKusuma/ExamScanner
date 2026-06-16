@@ -1,0 +1,71 @@
+---
+import Card from '../ui/Card.astro';
+import Icon from '../ui/Icon.astro';
+---
+
+<Card padding="lg" class="text-center group cursor-pointer border-4 border-dashed hover:border-solid transition-all duration-300" id="upload-area">
+  <div class="py-8 sm:py-12">
+    <div class="w-20 h-20 rounded-2xl bg-accent-yellow/30 border-2 border-brutal-text flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+      <Icon name="upload" class="w-9 h-9" />
+    </div>
+    <h3 class="font-display font-black text-xl mb-2">Drop your answer sheet here</h3>
+    <p class="font-body text-brutal-text/60 mb-8">or click to browse files</p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <label class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-6 py-3 bg-accent-yellow border-2 border-brutal-text cursor-pointer hover:bg-accent-yellow/80 transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.97]">
+        <Icon name="upload" class="w-4 h-4" />
+        Choose File
+        <input type="file" accept="image/*,.pdf" class="hidden" id="file-input" />
+      </label>
+      <label class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-6 py-3 bg-white border-2 border-brutal-text cursor-pointer hover:bg-brutal-text/5 transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.97]">
+        <Icon name="camera" class="w-4 h-4" />
+        Take Photo
+        <input type="file" accept="image/*" capture="environment" class="hidden" id="camera-input" />
+      </label>
+    </div>
+    <p class="mt-6 font-body text-xs text-brutal-text/40">Supports: JPEG, PNG, PDF &bull; Max 10MB</p>
+  </div>
+</Card>
+
+<script>
+  const uploadArea = document.getElementById('upload-area');
+  const fileInput = document.getElementById('file-input');
+  const cameraInput = document.getElementById('camera-input');
+
+  if (uploadArea && fileInput) {
+    uploadArea.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'LABEL' && e.target.tagName !== 'INPUT') {
+        fileInput.click();
+      }
+    });
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('!border-accent-blue', '!bg-accent-blue/5');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('!border-accent-blue', '!bg-accent-blue/5');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('!border-accent-blue', '!bg-accent-blue/5');
+      if (e.dataTransfer.files.length) {
+        handleFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length) handleFile(e.target.files[0]);
+    });
+
+    cameraInput.addEventListener('change', (e) => {
+      if (e.target.files.length) handleFile(e.target.files[0]);
+    });
+
+    function handleFile(file) {
+      const event = new CustomEvent('file-selected', { detail: { file, name: file.name, size: file.size } });
+      document.dispatchEvent(event);
+    }
+  }
+</script>

@@ -1,0 +1,89 @@
+---
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+---
+
+<section class="relative overflow-hidden pt-24 pb-32 px-4">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+      <div class="relative z-10">
+        <div class="inline-flex items-center gap-2 bg-accent-yellow/30 rounded-pill px-4 py-2 border-2 border-brutal-text mb-6">
+          <span class="w-2 h-2 rounded-full bg-accent-yellow border border-brutal-text"></span>
+          <span class="text-xs sm:text-sm font-display font-bold">AI-Powered Answer Sheet Scanner</span>
+        </div>
+        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-display font-black leading-[1.05] tracking-tight mb-6 text-balance">
+          Scan Exam<br/>
+          <span class="text-accent-blue">Papers</span><br/>
+          in Seconds
+        </h1>
+        <p class="text-lg sm:text-xl font-body font-medium text-brutal-text/60 mb-10 max-w-lg leading-relaxed">
+          Upload answer sheets and instantly generate student scores with AI-powered detection.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <Button variant="primary" size="lg" href="/scan">Try Scanner</Button>
+          <Button variant="outline" size="lg" href="#demo">
+            <Icon name="play" class="w-5 h-5" />
+            Watch Demo
+          </Button>
+        </div>
+        <div class="flex items-center gap-6 mt-16 pt-8 border-t-2 border-brutal-text/10">
+          <div class="flex -space-x-2">
+            {['bg-accent-yellow', 'bg-accent-blue', 'bg-accent-green', 'bg-accent-red'].map((color) => (
+              <div class={`w-8 h-8 rounded-full ${color} border-2 border-brutal-text ${color}`}></div>
+            ))}
+          </div>
+          <p class="text-sm font-display font-bold">Trusted by <span class="text-accent-blue">500+</span> teachers</p>
+        </div>
+      </div>
+      <div class="relative mt-12 lg:mt-0">
+        <div class="bg-white rounded-card-lg border-4 border-brutal-text shadow-brutal-lg p-6 sm:p-8 relative z-10">
+          <div class="flex items-center gap-3 pb-4 mb-4 border-b-2 border-brutal-text/10">
+            <div class="w-9 h-9 rounded-xl bg-accent-yellow border-2 border-brutal-text flex items-center justify-center font-display font-black text-xs">ES</div>
+            <div>
+              <p class="font-display font-bold text-sm">Midterm Examination</p>
+              <p class="font-body text-xs text-brutal-text/40">Physics 101 &bull; 25 Questions</p>
+            </div>
+          </div>
+          <div class="space-y-2.5">
+            {[
+              { num: 1, answer: 2 },
+              { num: 2, answer: 0 },
+              { num: 3, answer: 4 },
+              { num: 4, answer: 1 },
+              { num: 5, answer: 3 },
+            ].map((row) => (
+              <div class="flex items-center gap-3">
+                <span class="w-6 text-xs font-display font-bold text-brutal-text/40">{row.num}.</span>
+                <div class="flex gap-2">
+                  {['A', 'B', 'C', 'D', 'E'].map((letter, j) => (
+                    <div
+                      class={`w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-brutal-text flex items-center justify-center text-xs font-display font-bold transition-all duration-200 ${
+                        j === row.answer ? 'bg-brutal-text text-white scale-105' : 'bg-white text-brutal-text/40'
+                      }`}
+                    >
+                      {letter}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div class="mt-4 pt-4 border-t-2 border-brutal-text/10 flex items-center justify-between">
+            <span class="text-xs font-display font-bold text-accent-green">
+              <Icon name="check-circle" class="w-4 h-4 inline mr-1" />25/25 Detected
+            </span>
+            <span class="text-xs font-display font-bold text-brutal-text/40">Confidence: 98%</span>
+          </div>
+        </div>
+        <div class="absolute -top-3 -right-3 lg:-top-5 lg:-right-5 bg-accent-yellow rounded-card border-3 sm:border-4 border-brutal-text shadow-brutal p-4 sm:p-5 animate-float z-20">
+          <p class="text-2xl sm:text-3xl font-display font-black">98%</p>
+          <p class="text-xs sm:text-sm font-display font-bold">Accuracy Rate</p>
+        </div>
+        <div class="absolute -bottom-3 -left-3 lg:-bottom-5 lg:-left-5 bg-accent-green rounded-card border-3 sm:border-4 border-brutal-text shadow-brutal p-4 sm:p-5 animate-float-delayed z-20">
+          <p class="text-2xl sm:text-3xl font-display font-black">2.4K</p>
+          <p class="text-xs sm:text-sm font-display font-bold">Papers Scanned</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

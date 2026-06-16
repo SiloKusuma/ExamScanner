@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import Hero from '../components/landing/Hero.astro';
+import Features from '../components/landing/Features.astro';
+import HowItWorks from '../components/landing/HowItWorks.astro';
+import Statistics from '../components/landing/Statistics.astro';
+import Pricing from '../components/landing/Pricing.astro';
+import FAQ from '../components/landing/FAQ.astro';
+import Container from '../components/ui/Container.astro';
+---
+
+<BaseLayout title="ExamScanner - AI-Powered Answer Sheet Scanner">
+  <Header />
+  <main>
+    <Hero />
+    <Container>
+      <Features />
+    </Container>
+    <Container>
+      <HowItWorks />
+    </Container>
+    <Container>
+      <Statistics />
+    </Container>
+    <Container>
+      <Pricing />
+    </Container>
+    <Container>
+      <FAQ />
+    </Container>
+  </main>
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/layout/Sidebar.astro';
+import StatsGrid from '../components/dashboard/StatsGrid.astro';
+import Card from '../components/ui/Card.astro';
+import Icon from '../components/ui/Icon.astro';
+---
+
+<BaseLayout title="Dashboard - ExamScanner">
+  <div class="flex min-h-screen">
+    <Sidebar currentPath="/dashboard" />
+    <main class="flex-1 p-6 lg:p-8 overflow-auto">
+      <div class="max-w-6xl">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h1 class="text-3xl lg:text-4xl font-display font-black tracking-tight">Dashboard</h1>
+            <p class="font-body text-brutal-text/60 mt-1">Welcome back, Sarah! Here&apos;s your overview.</p>
+          </div>
+          <button class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-6 py-3 bg-accent-yellow border-2 border-brutal-text hover:shadow-brutal-sm transition-all duration-300 active:scale-[0.97]">
+            <Icon name="upload" class="w-4 h-4" />
+            New Scan
+          </button>
+        </div>
+        <StatsGrid />
+      </div>
+    </main>
+  </div>
+</BaseLayout>

@@ -1,0 +1,68 @@
+---
+import Card from '../ui/Card.astro';
+import Icon from '../ui/Icon.astro';
+
+const steps = [
+  {
+    step: '01',
+    icon: 'image',
+    title: 'Upload Photo',
+    description: 'Drag and drop an image or use your camera to capture the answer sheet.',
+    color: 'bg-accent-yellow',
+  },
+  {
+    step: '02',
+    icon: 'target',
+    title: 'Detect Answers',
+    description: 'Our AI automatically detects and reads all answer bubbles on the sheet.',
+    color: 'bg-accent-blue',
+  },
+  {
+    step: '03',
+    icon: 'bar-chart-3',
+    title: 'Generate Score',
+    description: 'Answers are compared against the answer key to calculate scores instantly.',
+    color: 'bg-accent-green',
+  },
+  {
+    step: '04',
+    icon: 'download',
+    title: 'Export Results',
+    description: 'Download results as CSV, Excel, or PDF for your grade book.',
+    color: 'bg-accent-red',
+  },
+];
+---
+
+<section id="how-it-works" class="py-24 px-4">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="inline-flex items-center gap-2 bg-accent-yellow/30 rounded-pill px-4 py-2 border-2 border-brutal-text mb-6">
+        <span class="text-xs sm:text-sm font-display font-bold">How It Works</span>
+      </div>
+      <h2 class="section-title mb-4">Four Simple Steps</h2>
+      <p class="section-subtitle">
+        From upload to results in under 30 seconds.
+      </p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {steps.map((step, index) => (
+        <div class="relative">
+          <Card padding="lg" class="text-center group h-full">
+            <div class={`w-16 h-16 rounded-2xl ${step.color} border-2 border-brutal-text flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
+              <Icon name={step.icon} class="w-7 h-7" />
+            </div>
+            <span class="font-display font-black text-sm text-brutal-text/30 mb-2 block">{step.step}</span>
+            <h3 class="font-display font-black text-lg mb-3">{step.title}</h3>
+            <p class="font-body text-sm text-brutal-text/60 leading-relaxed">{step.description}</p>
+          </Card>
+          {index < steps.length - 1 && (
+            <div class="hidden lg:block absolute top-1/2 -right-3 transform -translate-y-1/2 z-10">
+              <Icon name="arrow-right" class="w-6 h-6 text-brutal-text/20" />
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

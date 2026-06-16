@@ -1,0 +1,62 @@
+---
+import Card from '../ui/Card.astro';
+import Icon from '../ui/Icon.astro';
+import Badge from '../ui/Badge.astro';
+
+const sampleStudents = [
+  { id: 'S001', name: 'Alex Johnson', answers: ['A', 'B', 'C', 'D', 'E'], confidence: 98, key: ['A', 'B', 'C', 'D', 'E'] },
+  { id: 'S002', name: 'Maria Garcia', answers: ['A', 'C', 'C', 'D', 'E'], confidence: 95, key: ['A', 'B', 'C', 'D', 'E'] },
+  { id: 'S003', name: 'James Chen', answers: ['B', 'B', 'C', 'A', 'E'], confidence: 92, key: ['A', 'B', 'C', 'D', 'E'] },
+];
+---
+
+<Card padding="md" class="overflow-hidden">
+  <div class="flex items-center justify-between mb-5">
+    <h3 class="font-display font-black text-lg">Detected Answers</h3>
+    <Badge variant="green">3 Students</Badge>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="border-b-2 border-brutal-text">
+          <th class="text-left font-display font-bold text-sm pb-3 pr-4">Student</th>
+          {['Q1', 'Q2', 'Q3', 'Q4', 'Q5'].map((q) => (
+            <th class="text-center font-display font-bold text-sm pb-3 px-2">{q}</th>
+          ))}
+          <th class="text-center font-display font-bold text-sm pb-3 pl-4">Confidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        {sampleStudents.map((student) => (
+          <tr class="border-b border-brutal-text/10 last:border-b-0">
+            <td class="py-3 pr-4">
+              <p class="font-display font-bold text-sm">{student.name}</p>
+              <p class="font-body text-xs text-brutal-text/40">{student.id}</p>
+            </td>
+            {student.answers.map((answer, i) => {
+              const correct = answer === student.key[i];
+              return (
+                <td class="text-center py-3 px-2">
+                  <span
+                    class={`inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-brutal-text text-xs font-display font-bold ${
+                      correct ? 'bg-accent-green' : 'bg-accent-red text-white'
+                    }`}
+                  >
+                    {answer}
+                  </span>
+                </td>
+              );
+            })}
+            <td class="text-center py-3 pl-4">
+              <span class={`font-display font-bold text-sm ${
+                student.confidence >= 95 ? 'text-accent-green' : student.confidence >= 90 ? 'text-accent-yellow' : 'text-accent-red'
+              }`}>
+                {student.confidence}%
+              </span>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</Card>

@@ -1,0 +1,61 @@
+---
+import Card from '../ui/Card.astro';
+import Icon from '../ui/Icon.astro';
+
+export interface Props {
+  status?: 'idle' | 'processing' | 'complete' | 'error';
+  fileName?: string;
+}
+
+const { status = 'idle', fileName = '' } = Astro.props;
+---
+
+<Card padding="md" class="status-card" id="processing-status">
+  {status === 'idle' && (
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-xl bg-brutal-text/5 border-2 border-brutal-text flex items-center justify-center">
+        <Icon name="clock" class="w-6 h-6 text-brutal-text/40" />
+      </div>
+      <div>
+        <p class="font-display font-bold text-sm text-brutal-text/40">Awaiting Upload</p>
+        <p class="font-body text-xs text-brutal-text/30">Select an image to begin processing</p>
+      </div>
+    </div>
+  )}
+  {status === 'processing' && (
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-xl bg-accent-yellow border-2 border-brutal-text flex items-center justify-center">
+        <div class="w-5 h-5 border-2 border-brutal-text border-t-transparent rounded-full animate-spin"></div>
+      </div>
+      <div class="flex-1">
+        <p class="font-display font-bold text-sm">Processing...</p>
+        <p class="font-body text-xs text-brutal-text/40 mb-2">{fileName}</p>
+        <div class="w-full h-2 bg-brutal-text/10 rounded-pill border border-brutal-text/30 overflow-hidden">
+          <div class="h-full bg-accent-yellow rounded-pill animate-pulse" style="width: 60%"></div>
+        </div>
+      </div>
+    </div>
+  )}
+  {status === 'complete' && (
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-xl bg-accent-green border-2 border-brutal-text flex items-center justify-center">
+        <Icon name="check-circle" class="w-6 h-6" />
+      </div>
+      <div>
+        <p class="font-display font-bold text-sm text-accent-green">Complete!</p>
+        <p class="font-body text-xs text-brutal-text/40">Successfully processed {fileName}</p>
+      </div>
+    </div>
+  )}
+  {status === 'error' && (
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-xl bg-accent-red border-2 border-brutal-text flex items-center justify-center">
+        <Icon name="x-circle" class="w-6 h-6" />
+      </div>
+      <div>
+        <p class="font-display font-bold text-sm text-accent-red">Error</p>
+        <p class="font-body text-xs text-brutal-text/40">Could not process the image. Please try again.</p>
+      </div>
+    </div>
+  )}
+</Card>

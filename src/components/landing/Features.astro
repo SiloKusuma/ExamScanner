@@ -1,0 +1,68 @@
+---
+import Card from '../ui/Card.astro';
+import Icon from '../ui/Icon.astro';
+
+const features = [
+  {
+    icon: 'upload',
+    title: 'Upload Answer Sheet',
+    description: 'Drag and drop or capture a photo of any multiple-choice answer sheet.',
+    color: 'bg-accent-yellow',
+  },
+  {
+    icon: 'target',
+    title: 'Auto Detect Answers',
+    description: 'AI-powered detection reads A, B, C, D, E bubbles with high accuracy.',
+    color: 'bg-accent-blue',
+  },
+  {
+    icon: 'bar-chart-3',
+    title: 'Calculate Score',
+    description: 'Instantly calculate scores against answer keys with detailed breakdowns.',
+    color: 'bg-accent-green',
+  },
+  {
+    icon: 'download',
+    title: 'Export Results',
+    description: 'Export to CSV, Excel, or PDF for reporting and grade books.',
+    color: 'bg-accent-red',
+  },
+  {
+    icon: 'users',
+    title: 'Multi-Class Support',
+    description: 'Manage multiple classes and sections simultaneously with ease.',
+    color: 'bg-accent-yellow',
+  },
+  {
+    icon: 'zap',
+    title: 'Fast Processing',
+    description: 'Batch process hundreds of papers in under a minute.',
+    color: 'bg-accent-blue',
+  },
+];
+---
+
+<section id="features" class="py-24 px-4">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="inline-flex items-center gap-2 bg-accent-yellow/30 rounded-pill px-4 py-2 border-2 border-brutal-text mb-6">
+        <span class="text-xs sm:text-sm font-display font-bold">Features</span>
+      </div>
+      <h2 class="section-title mb-4">Everything You Need</h2>
+      <p class="section-subtitle">
+        Powerful tools designed for modern educators to streamline grading.
+      </p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {features.map((feature) => (
+        <Card padding="lg" class="group">
+          <div class={`w-12 h-12 rounded-xl ${feature.color} border-2 border-brutal-text flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
+            <Icon name={feature.icon} class="w-6 h-6" />
+          </div>
+          <h3 class="font-display font-black text-xl mb-3">{feature.title}</h3>
+          <p class="font-body text-brutal-text/60 leading-relaxed">{feature.description}</p>
+        </Card>
+      ))}
+    </div>
+  </div>
+</section>

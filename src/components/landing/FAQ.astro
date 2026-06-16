@@ -1,0 +1,92 @@
+---
+import Card from '../ui/Card.astro';
+import Icon from '../ui/Icon.astro';
+
+const faqs = [
+  {
+    question: 'What file formats does the scanner support?',
+    answer: 'The scanner supports JPEG, PNG, and PDF formats. For best results, use high-resolution images (300 DPI or higher) with good lighting and contrast.',
+  },
+  {
+    question: 'How accurate is the answer detection?',
+    answer: 'Our AI-powered detection system achieves 98%+ accuracy under optimal conditions. Accuracy may vary based on image quality, lighting, and how well the bubbles are filled.',
+  },
+  {
+    question: 'Can I use this with my existing answer sheet templates?',
+    answer: 'Yes! The scanner works with most standard multiple-choice answer sheet formats. Custom templates can also be configured for your specific needs.',
+  },
+  {
+    question: 'Is my data secure and private?',
+    answer: 'Absolutely. All images and data are encrypted in transit and at rest. We are GDPR and FERPA compliant, and your data is never shared with third parties.',
+  },
+  {
+    question: 'Can I export results to my grade book?',
+    answer: 'Yes, you can export results to CSV, Excel, and PDF formats. These can be easily imported into popular grade book software like PowerSchool and Canvas.',
+  },
+  {
+    question: 'What happens if the scanner misreads an answer?',
+    answer: 'The system flags low-confidence detections for manual review. You can easily correct any misread answers before finalizing scores.',
+  },
+];
+---
+
+<section id="faq" class="py-24 px-4">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="inline-flex items-center gap-2 bg-accent-yellow/30 rounded-pill px-4 py-2 border-2 border-brutal-text mb-6">
+        <span class="text-xs sm:text-sm font-display font-bold">FAQ</span>
+      </div>
+      <h2 class="section-title mb-4">Frequently Asked Questions</h2>
+      <p class="section-subtitle">
+        Everything you need to know about ExamScanner.
+      </p>
+    </div>
+    <div class="space-y-4">
+      {faqs.map((faq, index) => (
+        <div class="faq-item bg-white rounded-card border-2 border-brutal-text">
+          <button
+            class="faq-toggle w-full flex items-center justify-between p-6 text-left font-display font-bold text-base md:text-lg gap-4"
+            aria-expanded="false"
+            data-index={index}
+          >
+            <span>{faq.question}</span>
+            <Icon name="chevron-down" class="faq-icon w-5 h-5 shrink-0 transition-transform duration-300" />
+          </button>
+          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+            <div class="px-6 pb-6 font-body text-brutal-text/60 leading-relaxed">
+              {faq.answer}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.faq-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const answer = item.querySelector('.faq-answer');
+      const icon = item.querySelector('.faq-icon');
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+
+      document.querySelectorAll('.faq-item').forEach((other) => {
+        if (other !== item) {
+          other.querySelector('.faq-toggle').setAttribute('aria-expanded', 'false');
+          other.querySelector('.faq-answer').style.maxHeight = '0';
+          other.querySelector('.faq-icon').classList.remove('rotate-180');
+        }
+      });
+
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      if (isOpen) {
+        answer.style.maxHeight = '0';
+        icon.classList.remove('rotate-180');
+      } else {
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+        icon.classList.add('rotate-180');
+      }
+    });
+  });
+</script>

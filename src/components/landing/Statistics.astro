@@ -1,0 +1,26 @@
+---
+import Card from '../ui/Card.astro';
+import Icon from '../ui/Icon.astro';
+
+const stats = [
+  { value: '50K+', label: 'Papers Scanned', icon: 'file-text', color: 'bg-accent-yellow' },
+  { value: '2.4K+', label: 'Teachers Using', icon: 'users', color: 'bg-accent-blue' },
+  { value: '98%', label: 'Accuracy Rate', icon: 'target', color: 'bg-accent-green' },
+];
+---
+
+<section id="stats" class="py-24 px-4">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid sm:grid-cols-3 gap-6">
+      {stats.map((stat) => (
+        <Card padding="lg" class="text-center group" hover={true}>
+          <div class={`w-14 h-14 rounded-2xl ${stat.color} border-2 border-brutal-text flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform duration-300`}>
+            <Icon name={stat.icon} class="w-7 h-7" />
+          </div>
+          <p class="text-4xl md:text-5xl font-display font-black mb-2">{stat.value}</p>
+          <p class="font-body text-brutal-text/60">{stat.label}</p>
+        </Card>
+      ))}
+    </div>
+  </div>
+</section>

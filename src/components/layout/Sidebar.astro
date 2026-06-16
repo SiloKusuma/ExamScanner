@@ -1,0 +1,64 @@
+---
+import Icon from '../ui/Icon.astro';
+
+export interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = '/dashboard' } = Astro.props;
+
+const navItems = [
+  { href: '/dashboard', label: 'Dashboard', icon: 'bar-chart-3' },
+  { href: '/scan', label: 'Scan Papers', icon: 'camera' },
+  { href: '/results', label: 'Results', icon: 'file-text' },
+  { href: '#', label: 'Classes', icon: 'grid-3x3' },
+  { href: '#', label: 'Exports', icon: 'download' },
+  { href: '#', label: 'Settings', icon: 'settings' },
+];
+---
+
+<aside class="w-64 lg:w-72 h-screen sticky top-0 border-r-2 border-brutal-text bg-white flex flex-col shrink-0">
+  <div class="p-6 border-b-2 border-brutal-text">
+    <a href="/" class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-xl bg-accent-yellow border-2 border-brutal-text flex items-center justify-center font-display font-black text-sm">
+        ES
+      </div>
+      <span class="font-display font-black text-lg">ExamScanner</span>
+    </a>
+  </div>
+  <nav class="flex-1 p-4 space-y-1">
+    {navItems.map((item) => {
+      const isActive = currentPath === item.href;
+      return (
+        <a
+          href={item.href}
+          class={`flex items-center gap-3 px-4 py-3 rounded-pill font-display font-bold text-sm transition-all duration-200 ${
+            isActive
+              ? 'bg-accent-yellow border-2 border-brutal-text shadow-brutal-sm'
+              : 'text-brutal-text/60 hover:text-brutal-text hover:bg-brutal-text/5 border-2 border-transparent'
+          }`}
+        >
+          <Icon name={item.icon} class="w-5 h-5 shrink-0" />
+          {item.label}
+        </a>
+      );
+    })}
+  </nav>
+  <div class="p-4 border-t-2 border-brutal-text">
+    <div class="flex items-center gap-3 px-4 py-3">
+      <div class="w-9 h-9 rounded-xl bg-accent-blue border-2 border-brutal-text flex items-center justify-center font-display font-black text-sm text-white">
+        SK
+      </div>
+      <div>
+        <p class="font-display font-bold text-sm">Sarah Kim</p>
+        <p class="font-body text-xs text-brutal-text/40">Teacher</p>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<style>
+  aside {
+    scrollbar-width: thin;
+  }
+</style>

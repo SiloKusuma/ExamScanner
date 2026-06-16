@@ -1,0 +1,33 @@
+---
+import Card from '../ui/Card.astro';
+import Icon from '../ui/Icon.astro';
+
+const activities = [
+  { action: 'Physics 101 Midterm scanned', time: '2 min ago', color: 'bg-accent-green' },
+  { action: 'Results exported for Class 3B', time: '15 min ago', color: 'bg-accent-blue' },
+  { action: 'New class "Biology Honors" created', time: '1 hour ago', color: 'bg-accent-yellow' },
+  { action: 'Answer key updated for Quiz 4', time: '2 hours ago', color: 'bg-accent-red' },
+  { action: 'Batch scan completed (35 papers)', time: '3 hours ago', color: 'bg-accent-green' },
+  { action: 'Sarah Kim joined your classroom', time: '5 hours ago', color: 'bg-accent-blue' },
+];
+---
+
+<Card padding="md" class="h-full">
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="font-display font-black text-lg">Recent Activity</h3>
+    <span class="text-xs font-display font-bold text-accent-blue cursor-pointer hover:underline">View All</span>
+  </div>
+  <div class="space-y-0">
+    {activities.map((activity) => (
+      <div class="flex items-start gap-4 py-3 border-b border-brutal-text/5 last:border-b-0">
+        <div class={`w-8 h-8 rounded-xl ${activity.color} border border-brutal-text flex items-center justify-center shrink-0 mt-0.5`}>
+          <Icon name="activity" class="w-4 h-4" />
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="font-display font-bold text-sm">{activity.action}</p>
+          <p class="font-body text-xs text-brutal-text/40 mt-0.5">{activity.time}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</Card>

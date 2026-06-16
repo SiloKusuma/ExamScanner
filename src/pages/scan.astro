@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/layout/Sidebar.astro';
+import UploadArea from '../components/scan/UploadArea.astro';
+import ProcessingStatus from '../components/scan/ProcessingStatus.astro';
+import AnswerGrid from '../components/scan/AnswerGrid.astro';
+import Card from '../components/ui/Card.astro';
+import Icon from '../components/ui/Icon.astro';
+---
+
+<BaseLayout title="Scan Papers - ExamScanner">
+  <div class="flex min-h-screen">
+    <Sidebar currentPath="/scan" />
+    <main class="flex-1 p-6 lg:p-8 overflow-auto">
+      <div class="max-w-4xl">
+        <div class="mb-8">
+          <h1 class="text-3xl lg:text-4xl font-display font-black tracking-tight">Scan Papers</h1>
+          <p class="font-body text-brutal-text/60 mt-1">Upload or capture answer sheets for processing.</p>
+        </div>
+        <div class="space-y-6">
+          <UploadArea />
+          <ProcessingStatus status="idle" />
+          <AnswerGrid />
+        </div>
+      </div>
+    </main>
+  </div>
+</BaseLayout>

@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/layout/Sidebar.astro';
+import ResultsTable from '../components/results/ResultsTable.astro';
+import SearchFilter from '../components/results/SearchFilter.astro';
+import Pagination from '../components/results/Pagination.astro';
+import Card from '../components/ui/Card.astro';
+import Icon from '../components/ui/Icon.astro';
+---
+
+<BaseLayout title="Results - ExamScanner">
+  <div class="flex min-h-screen">
+    <Sidebar currentPath="/results" />
+    <main class="flex-1 p-6 lg:p-8 overflow-auto">
+      <div class="max-w-6xl">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h1 class="text-3xl lg:text-4xl font-display font-black tracking-tight">Results</h1>
+            <p class="font-body text-brutal-text/60 mt-1">View and export student results.</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-5 py-3 bg-white border-2 border-brutal-text hover:bg-brutal-text/5 transition-all duration-200 active:scale-[0.97]">
+              <Icon name="file-spreadsheet" class="w-4 h-4" />
+              Excel
+            </button>
+            <button class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-5 py-3 bg-white border-2 border-brutal-text hover:bg-brutal-text/5 transition-all duration-200 active:scale-[0.97]">
+              <Icon name="file" class="w-4 h-4" />
+              PDF
+            </button>
+            <button class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-5 py-3 bg-accent-yellow border-2 border-brutal-text hover:shadow-brutal-sm transition-all duration-200 active:scale-[0.97]">
+              <Icon name="printer" class="w-4 h-4" />
+              Print
+            </button>
+          </div>
+        </div>
+        <Card padding="md">
+          <SearchFilter class="mb-5" />
+          <ResultsTable />
+          <Pagination class="mt-6 pt-6 border-t-2 border-brutal-text/10" />
+        </Card>
+      </div>
+    </main>
+  </div>
+</BaseLayout>

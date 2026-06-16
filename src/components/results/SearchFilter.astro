@@ -1,0 +1,41 @@
+---
+import Icon from '../ui/Icon.astro';
+---
+
+export interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class={`flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between ${className}`}>
+  <div class="relative flex-1 max-w-md w-full">
+    <Icon name="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brutal-text/40" />
+    <input
+      type="text"
+      placeholder="Search students..."
+      class="brutal-input pl-11"
+    />
+  </div>
+  <div class="flex flex-wrap gap-2">
+    <select class="brutal-input !w-auto !rounded-pill !py-2.5 text-sm font-display font-bold appearance-none cursor-pointer min-w-[130px]">
+      <option>All Classes</option>
+      <option>Physics 101</option>
+      <option>Biology 201</option>
+      <option>Math 301</option>
+    </select>
+    <select class="brutal-input !w-auto !rounded-pill !py-2.5 text-sm font-display font-bold appearance-none cursor-pointer min-w-[130px]">
+      <option>All Grades</option>
+      <option>A (90-100)</option>
+      <option>B (80-89)</option>
+      <option>C (70-79)</option>
+      <option>D (60-69)</option>
+      <option>F (0-59)</option>
+    </select>
+    <button class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-5 py-3 bg-accent-yellow border-2 border-brutal-text hover:bg-accent-yellow/80 transition-all duration-200 active:scale-[0.97]">
+      <Icon name="download" class="w-4 h-4" />
+      Export
+    </button>
+  </div>
+</div>

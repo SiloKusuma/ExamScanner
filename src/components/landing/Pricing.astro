@@ -1,0 +1,87 @@
+---
+import Button from '../ui/Button.astro';
+import Card from '../ui/Card.astro';
+import Icon from '../ui/Icon.astro';
+
+const plans = [
+  {
+    name: 'Free',
+    price: '$0',
+    period: 'forever',
+    description: 'Perfect for trying out the scanner.',
+    color: 'bg-accent-yellow',
+    features: ['10 scans/month', 'Basic answer detection', 'CSV export', 'Single class'],
+    cta: 'Get Started',
+    popular: false,
+  },
+  {
+    name: 'Pro',
+    price: '$12',
+    period: '/month',
+    description: 'For individual teachers and tutors.',
+    color: 'bg-accent-blue',
+    features: ['500 scans/month', 'Advanced AI detection', 'CSV, Excel, PDF export', 'Up to 5 classes', 'Priority support'],
+    cta: 'Start Free Trial',
+    popular: true,
+  },
+  {
+    name: 'School',
+    price: '$49',
+    period: '/month',
+    description: 'For schools and institutions.',
+    color: 'bg-accent-green',
+    features: ['Unlimited scans', 'Batch processing', 'All export formats', 'Unlimited classes', 'API access', 'Dedicated support'],
+    cta: 'Contact Sales',
+    popular: false,
+  },
+];
+---
+
+<section id="pricing" class="py-24 px-4">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="inline-flex items-center gap-2 bg-accent-yellow/30 rounded-pill px-4 py-2 border-2 border-brutal-text mb-6">
+        <span class="text-xs sm:text-sm font-display font-bold">Pricing</span>
+      </div>
+      <h2 class="section-title mb-4">Simple, Transparent Pricing</h2>
+      <p class="section-subtitle">
+        Choose the plan that fits your needs. No hidden fees.
+      </p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      {plans.map((plan) => (
+        <div class={`relative ${plan.popular ? 'scale-105 md:-translate-y-2' : ''}`}>
+          {plan.popular && (
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+              <span class="bg-accent-yellow font-display font-bold text-xs px-4 py-1.5 rounded-pill border-2 border-brutal-text">
+                Most Popular
+              </span>
+            </div>
+          )}
+          <Card padding="lg" class={`flex flex-col h-full ${plan.popular ? 'border-4' : ''}`}>
+            <div class={`w-12 h-12 rounded-xl ${plan.color} border-2 border-brutal-text flex items-center justify-center mb-5`}>
+              <Icon name="zap" class="w-6 h-6" />
+            </div>
+            <h3 class="font-display font-black text-2xl mb-1">{plan.name}</h3>
+            <p class="font-body text-sm text-brutal-text/60 mb-5">{plan.description}</p>
+            <div class="mb-6">
+              <span class="font-display font-black text-5xl">{plan.price}</span>
+              <span class="font-body text-brutal-text/40">{plan.period}</span>
+            </div>
+            <ul class="space-y-3 mb-8 flex-1">
+              {plan.features.map((feature) => (
+                <li class="flex items-start gap-2.5">
+                  <Icon name="check" class="w-5 h-5 text-accent-green shrink-0 mt-0.5" />
+                  <span class="font-body text-sm">{feature}</span>
+                </li>
+              ))}
+            </ul>
+            <Button variant={plan.popular ? 'primary' : 'outline'} class="w-full" href="/scan">
+              {plan.cta}
+            </Button>
+          </Card>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

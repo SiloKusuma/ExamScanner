@@ -1,0 +1,56 @@
+---
+import WidgetCard from './WidgetCard.astro';
+import RecentActivity from './RecentActivity.astro';
+import Card from '../ui/Card.astro';
+
+const widgets = [
+  { icon: 'file-text', label: 'Total Scans', value: '2,847', change: '+12%', trend: 'up', color: 'bg-accent-yellow' },
+  { icon: 'users', label: 'Students', value: '486', change: '+8%', trend: 'up', color: 'bg-accent-blue' },
+  { icon: 'target', label: 'Accuracy', value: '97.8%', change: '+2.1%', trend: 'up', color: 'bg-accent-green' },
+  { icon: 'clock', label: 'Avg. Processing', value: '2.4s', change: '-0.3s', trend: 'down', color: 'bg-accent-red' },
+];
+---
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+  {widgets.map((w) => (
+    <WidgetCard {...w} />
+  ))}
+</div>
+
+<div class="grid lg:grid-cols-3 gap-6">
+  <div class="lg:col-span-2">
+    <Card padding="md" class="h-full">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-display font-black text-lg">Scan Activity</h3>
+        <div class="flex gap-2">
+          <span class="text-xs font-display font-bold rounded-pill px-3 py-1.5 bg-accent-yellow/30 border border-brutal-text cursor-pointer hover:bg-accent-yellow/50 transition-colors">Week</span>
+          <span class="text-xs font-display font-bold rounded-pill px-3 py-1.5 bg-white border border-brutal-text cursor-pointer hover:bg-brutal-text/5 transition-colors">Month</span>
+          <span class="text-xs font-display font-bold rounded-pill px-3 py-1.5 bg-white border border-brutal-text cursor-pointer hover:bg-brutal-text/5 transition-colors">Year</span>
+        </div>
+      </div>
+      <div class="h-64 flex items-end justify-between gap-2 pb-1">
+        {[
+          { day: 'Mon', value: 65 },
+          { day: 'Tue', value: 45 },
+          { day: 'Wed', value: 80 },
+          { day: 'Thu', value: 55 },
+          { day: 'Fri', value: 90 },
+          { day: 'Sat', value: 35 },
+          { day: 'Sun', value: 50 },
+        ].map((bar) => (
+          <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+            <span class="text-xs font-display font-bold text-brutal-text/40">{bar.value}</span>
+            <div
+              class="w-full bg-accent-yellow border-2 border-brutal-text rounded-md transition-all duration-300 hover:bg-accent-yellow/80 cursor-pointer"
+              style={`height: ${bar.value}%`}
+            ></div>
+            <span class="text-xs font-display font-bold text-brutal-text/60">{bar.day}</span>
+          </div>
+        ))}
+      </div>
+    </Card>
+  </div>
+  <div>
+    <RecentActivity />
+  </div>
+</div>
