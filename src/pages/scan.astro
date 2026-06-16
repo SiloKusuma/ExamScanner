@@ -1,11 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Sidebar from '../components/layout/Sidebar.astro';
-import UploadArea from '../components/scan/UploadArea.astro';
-import ProcessingStatus from '../components/scan/ProcessingStatus.astro';
-import AnswerGrid from '../components/scan/AnswerGrid.astro';
-import Card from '../components/ui/Card.astro';
-import Icon from '../components/ui/Icon.astro';
 ---
 
 <BaseLayout title="Scan Papers - ExamScanner">
@@ -18,11 +13,173 @@ import Icon from '../components/ui/Icon.astro';
           <p class="font-body text-brutal-text/60 mt-1">Upload or capture answer sheets for processing.</p>
         </div>
         <div class="space-y-6">
-          <UploadArea />
-          <ProcessingStatus status="idle" />
-          <AnswerGrid />
+          <div id="upload-area" class="bg-white rounded-card border-2 border-dashed border-brutal-text shadow-brutal p-8 md:p-12 text-center group cursor-pointer transition-all duration-300 hover:border-solid">
+            <div class="py-8 sm:py-12">
+              <div id="upload-icon" class="w-20 h-20 rounded-2xl bg-accent-yellow/30 border-2 border-brutal-text flex items-center justify-center mx-auto mb-6 transition-transform duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <h3 id="upload-title" class="font-display font-black text-xl mb-2">Drop your answer sheet here</h3>
+              <p id="upload-subtitle" class="font-body text-brutal-text/60 mb-8">or click to browse files</p>
+              <div class="flex flex-wrap justify-center gap-3">
+                <label id="file-label" class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-6 py-3 bg-accent-yellow border-2 border-brutal-text cursor-pointer hover:bg-accent-yellow/80 transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.97]">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Choose File
+                  <input type="file" accept="image/*,.pdf" class="hidden" id="file-input" />
+                </label>
+              </div>
+              <p class="mt-6 font-body text-xs text-brutal-text/40">Supports: JPEG, PNG, PDF &bull; Max 10MB</p>
+            </div>
+          </div>
+
+          <div id="status-card" class="bg-white rounded-card border-2 border-brutal-text shadow-brutal p-6 hidden">
+            <div class="flex items-center gap-4">
+              <div id="status-icon" class="w-12 h-12 rounded-xl bg-brutal-text/5 border-2 border-brutal-text flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div class="flex-1">
+                <p id="status-title" class="font-display font-bold text-sm">Awaiting Upload</p>
+                <p id="status-desc" class="font-body text-xs text-brutal-text/40">Select an image to begin processing</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="answers-card" class="bg-white rounded-card border-2 border-brutal-text shadow-brutal p-6 md:p-8 hidden overflow-hidden">
+            <div class="flex items-center justify-between mb-5">
+              <h3 class="font-display font-black text-lg">Detected Answers</h3>
+              <span id="student-badge" class="inline-flex items-center gap-1.5 font-display font-bold text-xs rounded-pill px-3.5 py-1.5 bg-accent-green text-brutal-text border border-brutal-text"></span>
+            </div>
+            <div id="answers-table-wrapper" class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="border-b-2 border-brutal-text" id="answers-header"></tr>
+                </thead>
+                <tbody id="answers-body"></tbody>
+              </table>
+            </div>
+            <div id="result-summary" class="mt-6 pt-6 border-t-2 border-brutal-text/10 hidden">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                <div class="p-4 rounded-xl bg-accent-green/20 border border-brutal-text">
+                  <p class="text-2xl font-display font-black" id="result-correct">0</p>
+                  <p class="text-xs font-display font-bold">Correct</p>
+                </div>
+                <div class="p-4 rounded-xl bg-accent-red/20 border border-brutal-text">
+                  <p class="text-2xl font-display font-black" id="result-wrong">0</p>
+                  <p class="text-xs font-display font-bold">Wrong</p>
+                </div>
+                <div class="p-4 rounded-xl bg-accent-blue/20 border border-brutal-text">
+                  <p class="text-2xl font-display font-black" id="result-score">0</p>
+                  <p class="text-xs font-display font-bold">Score</p>
+                </div>
+                <div class="p-4 rounded-xl bg-accent-yellow/20 border border-brutal-text">
+                  <p class="text-2xl font-display font-black" id="result-pct">0%</p>
+                  <p class="text-xs font-display font-bold">Grade</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </main>
   </div>
 </BaseLayout>
+
+<script>
+const API = 'https://meong.biz.id/examscan';
+
+const uploadArea = document.getElementById('upload-area');
+const fileInput = document.getElementById('file-input');
+const statusCard = document.getElementById('status-card');
+const statusIcon = document.getElementById('status-icon');
+const statusTitle = document.getElementById('status-title');
+const statusDesc = document.getElementById('status-desc');
+const answersCard = document.getElementById('answers-card');
+const answersHeader = document.getElementById('answers-header');
+const answersBody = document.getElementById('answers-body');
+const resultSummary = document.getElementById('result-summary');
+const studentBadge = document.getElementById('student-badge');
+
+uploadArea.addEventListener('click', (e) => {
+  if (e.target.tagName !== 'LABEL' && e.target.tagName !== 'INPUT') fileInput.click();
+});
+
+uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('!border-accent-blue', '!bg-accent-blue/5'); });
+uploadArea.addEventListener('dragleave', () => { uploadArea.classList.remove('!border-accent-blue', '!bg-accent-blue/5'); });
+uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.classList.remove('!border-accent-blue', '!bg-accent-blue/5'); if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', (e) => { if (e.target.files.length) handleFile(e.target.files[0]); });
+
+async function handleFile(file) {
+  setStatus('uploading');
+  setUploadUI(true, file.name);
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('class_id', '1');
+  formData.append('student_name', 'Student ' + Date.now());
+
+  try {
+    const up = await fetch(API + '/upload.php', { method: 'POST', body: formData }).then(r => r.json());
+    if (!up.scan_id) throw new Error('Upload failed');
+
+    setStatus('processing', file.name);
+    await new Promise(r => setTimeout(r, 1500));
+
+    const pr = await fetch(API + '/process.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ scan_id: up.scan_id }),
+    }).then(r => r.json());
+
+    setStatus('complete', file.name);
+    renderResults(pr);
+  } catch (e) {
+    setStatus('error');
+  }
+}
+
+function setUploadUI(uploading, name) {
+  document.getElementById('upload-title').textContent = uploading ? name : 'Drop your answer sheet here';
+  document.getElementById('upload-subtitle').textContent = uploading ? 'Processing...' : 'or click to browse files';
+  document.getElementById('upload-icon').innerHTML = uploading
+    ? '<div class="w-8 h-8 border-3 border-brutal-text border-t-transparent rounded-full animate-spin"></div>'
+    : '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>';
+}
+
+function setStatus(status, fileName) {
+  statusCard.classList.remove('hidden');
+  const icons = { idle: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>', uploading: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>', processing: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>', complete: '<polyline points="20 6 9 17 4 12"/>', error: '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>' };
+  const colors = { idle: 'bg-brutal-text/5', uploading: 'bg-accent-yellow', processing: 'bg-accent-blue', complete: 'bg-accent-green', error: 'bg-accent-red' };
+  statusIcon.className = 'w-12 h-12 rounded-xl ' + colors[status] + ' border-2 border-brutal-text flex items-center justify-center';
+  statusIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + icons[status] + '</svg>';
+  statusTitle.textContent = { idle: 'Awaiting Upload', uploading: 'Uploading...', processing: 'Processing...', complete: 'Complete!', error: 'Error' }[status];
+  statusDesc.innerHTML = { idle: 'Select an image to begin', uploading: fileName || 'Uploading...', processing: 'Detecting answers...<div class="mt-2 w-full h-2 bg-brutal-text/10 rounded-pill border border-brutal-text/30 overflow-hidden"><div class="h-full bg-accent-yellow rounded-pill animate-pulse" style="width:60%"></div></div>', complete: 'Processing complete', error: 'Could not process the image' }[status];
+}
+
+function renderResults(data) {
+  answersCard.classList.remove('hidden');
+  resultSummary.classList.remove('hidden');
+  studentBadge.textContent = data.student_name || 'Student';
+
+  const questions = data.answers || [];
+  const rows = [];
+  for (let i = 0; i < questions.length; i += 5) rows.push(questions.slice(i, i + 5));
+
+  const headerCells = ['<th class="text-left font-display font-bold text-sm pb-3 pr-4">Question</th>'];
+  for (let i = 0; i < 5 && i < questions.length; i++) headerCells.push('<th class="text-center font-display font-bold text-sm pb-3 px-2">Q' + (i + 1) + '</th>');
+  headerCells.push('<th class="text-center font-display font-bold text-sm pb-3 pl-4">Confidence</th>');
+  answersHeader.innerHTML = headerCells.join('');
+
+  answersBody.innerHTML = rows.map((row, ri) =>
+    '<tr class="border-b border-brutal-text/10">' +
+    '<td class="py-3 pr-4 font-display font-bold text-sm">' + (ri * 5 + 1) + '-' + (ri * 5 + row.length) + '</td>' +
+    row.map(a => '<td class="text-center py-3 px-2"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-brutal-text text-xs font-display font-bold ' + (a.is_correct ? 'bg-accent-green' : 'bg-accent-red text-white') + '">' + a.detected + '</span></td>').join('') +
+    Array.from({ length: 5 - row.length }, () => '<td></td>').join('') +
+    '<td class="text-center py-3 pl-4"><span class="font-display font-bold text-sm ' + (data.confidence >= 95 ? 'text-accent-green' : data.confidence >= 90 ? 'text-accent-yellow' : 'text-accent-red') + '">' + data.confidence + '%</span></td>' +
+    '</tr>'
+  ).join('');
+
+  document.getElementById('result-correct').textContent = data.correct_count;
+  document.getElementById('result-wrong').textContent = data.wrong_count;
+  document.getElementById('result-score').textContent = data.score;
+  document.getElementById('result-pct').textContent = data.grade;
+}
+</script>

@@ -1,28 +1,119 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Sidebar from '../components/layout/Sidebar.astro';
-import StatsGrid from '../components/dashboard/StatsGrid.astro';
-import Card from '../components/ui/Card.astro';
-import Icon from '../components/ui/Icon.astro';
 ---
 
 <BaseLayout title="Dashboard - ExamScanner">
   <div class="flex min-h-screen">
     <Sidebar currentPath="/dashboard" />
     <main class="flex-1 p-6 lg:p-8 overflow-auto">
-      <div class="max-w-6xl">
+      <div class="max-w-6xl" id="dashboard-root">
         <div class="flex items-center justify-between mb-8">
           <div>
             <h1 class="text-3xl lg:text-4xl font-display font-black tracking-tight">Dashboard</h1>
-            <p class="font-body text-brutal-text/60 mt-1">Welcome back, Sarah! Here&apos;s your overview.</p>
+            <p class="font-body text-brutal-text/60 mt-1" id="welcome-text">Loading dashboard...</p>
           </div>
-          <button class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-6 py-3 bg-accent-yellow border-2 border-brutal-text hover:shadow-brutal-sm transition-all duration-300 active:scale-[0.97]">
-            <Icon name="upload" class="w-4 h-4" />
+          <a href="/scan" class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-6 py-3 bg-accent-yellow border-2 border-brutal-text hover:shadow-brutal-sm transition-all duration-300 active:scale-[0.97]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             New Scan
-          </button>
+          </a>
         </div>
-        <StatsGrid />
+        <div id="stats-widgets" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8"></div>
+        <div class="grid lg:grid-cols-3 gap-6">
+          <div id="chart-card" class="lg:col-span-2 bg-white rounded-card border-2 border-brutal-text shadow-brutal p-6 md:p-8"></div>
+          <div id="activity-card" class="bg-white rounded-card border-2 border-brutal-text shadow-brutal p-6 md:p-8"></div>
+        </div>
       </div>
     </main>
   </div>
 </BaseLayout>
+
+<script>
+const API = 'https://meong.biz.id/examscan';
+
+function timeAgo(datetime) {
+  const now = new Date();
+  const then = new Date(datetime);
+  const diff = Math.floor((now - then) / 1000);
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff / 60) + ' min ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+  if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+  return then.toLocaleDateString();
+}
+
+async function loadDashboard() {
+  try {
+    const data = await fetch(`${API}/stats.php`).then(r => r.json());
+
+    document.getElementById('welcome-text').textContent =
+      `${data.total_scans} scans processed to date.`;
+
+    const widgets = [
+      { icon: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8', label: 'Total Scans', value: data.total_scans.toLocaleString(), color: 'bg-accent-yellow' },
+      { icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75', label: 'Students', value: data.total_students.toLocaleString(), color: 'bg-accent-blue' },
+      { icon: 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 6v6l4 2', label: 'Avg Processing', value: data.avg_processing + '%', color: 'bg-accent-green' },
+      { icon: 'M12 20V10 M18 20V4 M6 20v-4', label: 'Accuracy', value: data.accuracy + '%', color: 'bg-accent-red' },
+    ];
+
+    const container = document.getElementById('stats-widgets');
+    container.innerHTML = widgets.map(w => `
+      <div class="bg-white rounded-card border-2 border-brutal-text shadow-brutal p-6 transition-all duration-300 hover:shadow-brutal-hover hover:-translate-y-1">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-11 h-11 rounded-xl ${w.color} border-2 border-brutal-text flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${w.icon}"/></svg>
+          </div>
+        </div>
+        <p class="text-3xl font-display font-black mb-1">${w.value}</p>
+        <p class="font-body text-sm text-brutal-text/60">${w.label}</p>
+      </div>
+    `).join('');
+
+    const chartEl = document.getElementById('chart-card');
+    const weekly = data.weekly_activity || {};
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const maxVal = Math.max(...Object.values(weekly), 1);
+
+    chartEl.innerHTML = `
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-display font-black text-lg">Scan Activity</h3>
+        <span class="text-xs font-display font-bold text-brutal-text/40">This week</span>
+      </div>
+      <div class="h-64 flex items-end justify-between gap-2">
+        ${days.map(d => `
+          <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+            <span class="text-xs font-display font-bold text-brutal-text/40">${weekly[d] || 0}</span>
+            <div class="w-full bg-accent-yellow border-2 border-brutal-text rounded-md transition-all duration-300 hover:bg-accent-yellow/80 cursor-pointer" style="height: ${((weekly[d]||0)/maxVal)*100}%"></div>
+            <span class="text-xs font-display font-bold text-brutal-text/60">${d}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    const activityEl = document.getElementById('activity-card');
+    const activities = data.recent_activities || [];
+    activityEl.innerHTML = `
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-display font-black text-lg">Recent Activity</h3>
+      </div>
+      <div class="space-y-0">
+        ${activities.map(a => `
+          <div class="flex items-center gap-4 py-3 border-b border-brutal-text/5 last:border-b-0">
+            <div class="w-8 h-8 rounded-xl bg-accent-yellow border border-brutal-text flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-display font-bold text-sm">${a.action}</p>
+              <p class="font-body text-xs text-brutal-text/40 mt-0.5">${a.time}</p>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } catch (e) {
+    document.getElementById('welcome-text').textContent = 'Could not load dashboard data. Make sure the API server is running.';
+  }
+}
+
+loadDashboard();
+</script>

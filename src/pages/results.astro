@@ -1,11 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Sidebar from '../components/layout/Sidebar.astro';
-import ResultsTable from '../components/results/ResultsTable.astro';
-import SearchFilter from '../components/results/SearchFilter.astro';
-import Pagination from '../components/results/Pagination.astro';
-import Card from '../components/ui/Card.astro';
-import Icon from '../components/ui/Icon.astro';
 ---
 
 <BaseLayout title="Results - ExamScanner">
@@ -19,26 +14,174 @@ import Icon from '../components/ui/Icon.astro';
             <p class="font-body text-brutal-text/60 mt-1">View and export student results.</p>
           </div>
           <div class="flex gap-2">
-            <button class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-5 py-3 bg-white border-2 border-brutal-text hover:bg-brutal-text/5 transition-all duration-200 active:scale-[0.97]">
-              <Icon name="file-spreadsheet" class="w-4 h-4" />
+            <a id="export-csv" href="#" class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-5 py-3 bg-white border-2 border-brutal-text hover:bg-brutal-text/5 transition-all duration-200 active:scale-[0.97]">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              CSV
+            </a>
+            <a id="export-excel" href="#" class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-5 py-3 bg-white border-2 border-brutal-text hover:bg-brutal-text/5 transition-all duration-200 active:scale-[0.97]">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
               Excel
-            </button>
-            <button class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-5 py-3 bg-white border-2 border-brutal-text hover:bg-brutal-text/5 transition-all duration-200 active:scale-[0.97]">
-              <Icon name="file" class="w-4 h-4" />
-              PDF
-            </button>
-            <button class="inline-flex items-center gap-2 font-display font-bold text-sm rounded-pill px-5 py-3 bg-accent-yellow border-2 border-brutal-text hover:shadow-brutal-sm transition-all duration-200 active:scale-[0.97]">
-              <Icon name="printer" class="w-4 h-4" />
-              Print
-            </button>
+            </a>
           </div>
         </div>
-        <Card padding="md">
-          <SearchFilter class="mb-5" />
-          <ResultsTable />
-          <Pagination class="mt-6 pt-6 border-t-2 border-brutal-text/10" />
-        </Card>
+        <div class="bg-white rounded-card border-2 border-brutal-text shadow-brutal p-6 md:p-8">
+          <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-6">
+            <div class="relative flex-1 max-w-md w-full">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-4 top-1/2 -translate-y-1/2 text-brutal-text/40"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="search-input" placeholder="Search students..." class="w-full rounded-pill border-2 border-brutal-text px-6 py-3 pl-11 font-body text-base bg-white focus:outline-none focus:ring-2 focus:ring-accent-blue transition-all duration-200" />
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <select id="class-filter" class="rounded-pill border-2 border-brutal-text px-4 py-3 font-display font-bold text-sm bg-white appearance-none cursor-pointer min-w-[130px] focus:outline-none focus:ring-2 focus:ring-accent-blue">
+                <option value="">All Classes</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b-2 border-brutal-text">
+                  <th class="text-left font-display font-bold text-sm pb-3 pr-4">Student ID</th>
+                  <th class="text-left font-display font-bold text-sm pb-3 pr-4">Name</th>
+                  <th class="text-center font-display font-bold text-sm pb-3 px-2">Score</th>
+                  <th class="text-center font-display font-bold text-sm pb-3 px-2">Correct</th>
+                  <th class="text-center font-display font-bold text-sm pb-3 px-2">Wrong</th>
+                  <th class="text-center font-display font-bold text-sm pb-3 px-2">Percentage</th>
+                  <th class="text-center font-display font-bold text-sm pb-3 pl-4">Grade</th>
+                </tr>
+              </thead>
+              <tbody id="results-body">
+                <tr><td colspan="7" class="text-center py-12 font-body text-brutal-text/40">Loading results...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div id="pagination" class="mt-6 pt-6 border-t-2 border-brutal-text/10 flex flex-col sm:flex-row items-center justify-between gap-4"></div>
+        </div>
       </div>
     </main>
   </div>
 </BaseLayout>
+
+<script>
+const API = 'https://meong.biz.id/examscan';
+
+let currentPage = 1;
+let currentSearch = '';
+let currentClass = '';
+let totalPages = 1;
+let totalResults = 0;
+
+async function loadResults() {
+  const params = new URLSearchParams({ page: currentPage });
+  if (currentSearch) params.set('search', currentSearch);
+  if (currentClass) params.set('class_id', currentClass);
+
+  try {
+    const data = await fetch(API + '/results.php?' + params.toString()).then(r => r.json());
+
+    const tbody = document.getElementById('results-body');
+    if (!data.results || data.results.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center py-12 font-body text-brutal-text/40">No results found.</td></tr>';
+      return;
+    }
+
+    const gradeColors = {
+      'A+': 'bg-accent-green', 'A': 'bg-accent-green', 'A-': 'bg-accent-green/70',
+      'B+': 'bg-accent-blue', 'B': 'bg-accent-blue/70', 'B-': 'bg-accent-blue/50',
+      'C+': 'bg-accent-yellow', 'C': 'bg-accent-yellow/70',
+      'D': 'bg-accent-red/70', 'F': 'bg-accent-red',
+    };
+
+    tbody.innerHTML = data.results.map(r =>
+      '<tr class="border-b border-brutal-text/10 hover:bg-brutal-text/[0.02] transition-colors">' +
+      '<td class="py-3.5 pr-4"><span class="font-body text-sm font-medium">' + (r.student_id_code || '-') + '</span></td>' +
+      '<td class="py-3.5 pr-4"><span class="font-display font-bold text-sm">' + r.student_name + '</span></td>' +
+      '<td class="text-center py-3.5 px-2"><span class="font-display font-bold text-sm">' + r.score + '/' + r.total_questions + '</span></td>' +
+      '<td class="text-center py-3.5 px-2"><span class="font-display font-bold text-sm text-accent-green">' + r.correct_count + '</span></td>' +
+      '<td class="text-center py-3.5 px-2"><span class="font-display font-bold text-sm text-accent-red">' + r.wrong_count + '</span></td>' +
+      '<td class="text-center py-3.5 px-2"><span class="font-display font-bold text-sm">' + r.percentage + '%</span></td>' +
+      '<td class="text-center py-3.5 pl-4"><span class="inline-block font-display font-bold text-xs rounded-pill px-3 py-1 border border-brutal-text ' + (gradeColors[r.grade] || 'bg-brutal-text/5') + '">' + r.grade + '</span></td>' +
+      '</tr>'
+    ).join('');
+
+    totalPages = data.total_pages || 1;
+    totalResults = data.total || 0;
+    renderPagination();
+    populateClassFilter(data.classes);
+  } catch (e) {
+    document.getElementById('results-body').innerHTML = '<tr><td colspan="7" class="text-center py-12 font-body text-accent-red">Failed to load results. Check API connection.</td></tr>';
+  }
+}
+
+function renderPagination() {
+  const el = document.getElementById('pagination');
+  const start = (currentPage - 1) * 8 + 1;
+  const end = Math.min(currentPage * 8, totalResults);
+
+  let html = '<p class="font-body text-sm text-brutal-text/40">Showing <span class="font-display font-bold text-brutal-text">' + start + '</span> to <span class="font-display font-bold text-brutal-text">' + end + '</span> of <span class="font-display font-bold text-brutal-text">' + totalResults + '</span> results</p>';
+
+  html += '<div class="flex items-center gap-2">';
+  html += '<button class="page-btn w-9 h-9 rounded-xl border-2 border-brutal-text flex items-center justify-center hover:bg-brutal-text/5 transition-all duration-200 active:scale-[0.97]" data-page="' + (currentPage - 1) + '" ' + (currentPage <= 1 ? 'disabled' : '') + '>' +
+    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' +
+    '</button>';
+
+  for (let i = 1; i <= totalPages; i++) {
+    html += '<button class="page-btn w-9 h-9 rounded-xl border-2 border-brutal-text font-display font-bold text-sm transition-all duration-200 active:scale-[0.97] ' + (i === currentPage ? 'bg-accent-yellow shadow-brutal-sm' : 'hover:bg-brutal-text/5') + '" data-page="' + i + '">' + i + '</button>';
+  }
+
+  html += '<button class="page-btn w-9 h-9 rounded-xl border-2 border-brutal-text flex items-center justify-center hover:bg-brutal-text/5 transition-all duration-200 active:scale-[0.97]" data-page="' + (currentPage + 1) + '" ' + (currentPage >= totalPages ? 'disabled' : '') + '>' +
+    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+    '</button>';
+  html += '</div>';
+
+  el.innerHTML = html;
+
+  el.querySelectorAll('.page-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const page = parseInt(btn.dataset.page);
+      if (page && page >= 1 && page <= totalPages) {
+        currentPage = page;
+        loadResults();
+      }
+    });
+  });
+}
+
+function populateClassFilter(classes) {
+  const select = document.getElementById('class-filter');
+  if (!classes || classes.length === 0) return;
+  const currentVal = select.value;
+  select.innerHTML = '<option value="">All Classes</option>' + classes.map(c => '<option value="' + c.id + '">' + c.name + '</option>').join('');
+  select.value = currentVal;
+}
+
+document.getElementById('search-input').addEventListener('input', (e) => {
+  clearTimeout(window._searchTimer);
+  window._searchTimer = setTimeout(() => {
+    currentSearch = e.target.value;
+    currentPage = 1;
+    loadResults();
+  }, 300);
+});
+
+document.getElementById('class-filter').addEventListener('change', (e) => {
+  currentClass = e.target.value;
+  currentPage = 1;
+  loadResults();
+});
+
+document.getElementById('export-csv').addEventListener('click', (e) => {
+  e.preventDefault();
+  const url = API + '/export.php?format=csv' + (currentClass ? '&class_id=' + currentClass : '');
+  window.open(url, '_blank');
+});
+
+document.getElementById('export-excel').addEventListener('click', (e) => {
+  e.preventDefault();
+  const url = API + '/export.php?format=csv' + (currentClass ? '&class_id=' + currentClass : '');
+  window.open(url, '_blank');
+});
+
+loadResults();
+</script>
